@@ -5,6 +5,7 @@ Vue.use(VueRouter)
 const FirstPage=()=> import('@/views/firstPage/FirstPage')
 const Login=()=> import('@/views/login/Login')
 const Activity=()=> import('@/views/activity/Activity')
+const Prize=()=>import('@/views/prize/Prize')
 
 const routes=[
     {
@@ -25,7 +26,11 @@ const routes=[
         meta:{isLogin:true},
         component:Activity
     },
-
+    {
+        path: '/prize',
+        meta:{isLogin:true},
+        component:Prize
+    },
 ]
 
 const router=new VueRouter({

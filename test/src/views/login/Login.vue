@@ -79,9 +79,7 @@ export default {
       name: '',
       id:'',
       classNum:'',
-      college:["交通运输工程学院",
-        "土木工程学院",
-        "汽车与机械工程学院",],
+      college:[],
       major:[],
       majorValue:[],
       collegeValue: [],
@@ -111,8 +109,8 @@ export default {
         })
       }
         else {
-          let info={"id":this.id,"name":this.name,"class":this.classNum,"college":this.college.join(","),"major":this.major.join(",")}
-        // console.log(info)
+          let info={"xh":this.id,"xm":this.name,"xy":this.collegeValue.join(","),"zy":this.majorValue.join(","),"bj":this.classNum}
+        console.log(info)
         localStorage.setItem('userInfo', JSON.stringify(info));
         this.$router.replace('/firstPage')
       }

@@ -36,7 +36,7 @@
 import NavBar from "@/components/common/navbar/NavBar";
 import Scroll from "@/components/common/scroll/Scroll"
 import Vue from "vue";
-import {getInfo} from "@/network/login";
+import {getInfo,getPrize} from "@/network/login";
 
 export default {
   name: "Activity",
@@ -80,10 +80,33 @@ export default {
         this.isFinish=false;
       }
       else{
-        this.$message.error({
-          message: '注意:已经没有题了',
-          center: true
-        })
+
+        if(this.currentNumber>=this.correct){
+
+          this.$message({
+            message: '恭喜你，答题成功，请领取获奖证书',
+            type: 'success',
+            center:true
+          });
+
+          getPrize().then(res=>{
+            console.log(res)
+            this.$router.replace({
+              path: '/prize',
+              query:{
+                url:res.data.url
+              }
+            })
+          })
+        }
+        else{
+          this.$message.error({
+            message: '抱歉，您没有通过答题活动，请再来一次',
+            center: true
+          })
+          this.$router.replace('/firstPage')
+        }
+
       }
     },
     submit(){
@@ -117,6 +140,14 @@ export default {
     itemClick(index){
       // console.log("index",this.currentIndex);
       // console.log("length",this.resLength)
+      if(this.isFinish){
+        this.$message({
+          message: '本题已回答完毕，请点击下一个',
+          type: 'warning',
+          center: true
+        });
+        return;
+      }
 
 
       if(this.isActive[index]){
