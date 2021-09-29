@@ -2,6 +2,7 @@
   <div class="prize">
     <Scroll class="login-bg" ref="scroll">
       <div class="first-top">
+        <img class="top-img" src="~@/assets/img/back.png" @click="goback">
         <div class="first-top-time">恭喜您获得了证书</div>
         请到指定地点领取纸质版证书
       </div>
@@ -27,6 +28,9 @@ export default {
     console.log(this.$route.query.url)
   },
   methods:{
+    goback(){
+      this.$router.push('/firstPage')
+    },
     imageLoad(){
       this.$refs.scroll.refresh()
     }
@@ -54,6 +58,7 @@ export default {
 
 }
 .first-top {
+  position: relative;
   background-image: url('~@/assets/img/first/bg1.png');
   background-position:center center;
   background-repeat: no-repeat;
@@ -85,5 +90,12 @@ export default {
   border: 2px solid #fff;
   margin-bottom: 30px;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+.first-top .top-img{
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  top: 10px;
+  left: 10px;
 }
 </style>

@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import {getInfo} from "@/network/login";
 import Scroll from "@/components/common/scroll/Scroll";
 export default {
   name: "Login",
@@ -87,11 +86,18 @@ export default {
   },
   methods:{
     getDataInfo(){
-      getInfo().then(res=>{
-        // console.log(res);
-        this.college=res.data.xy;
-        this.major=res.data.zy;
-      })
+      if(Object.keys(this.$store.state.info).length==0){
+        this.$store.dispatch('getInfo').then(res=>{
+          console.log(res);
+          // console.log(this.$store.state.info);
+          this.college=this.$store.state.info.xy;
+          this.major=this.$store.state.info.zy;
+        })
+      }
+      else{
+        this.college=this.$store.state.info.xy;
+        this.major=this.$store.state.info.zy;
+      }
     },
     login(){
       if( this.major.length<=0||this.college.length<=0||this.id==''||this.name==''||this.classNum==''){

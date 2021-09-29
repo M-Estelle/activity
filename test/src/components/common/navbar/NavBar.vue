@@ -27,4 +27,10 @@ export default {
   .center {
     flex: 1;
   }
+  .left img {
+    /*box-sizing: border-box;*/
+    padding: 5px 0;
+    width: 34px;
+    height: 34px;
+  }
 </style>

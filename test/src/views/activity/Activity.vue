@@ -2,7 +2,7 @@
   <div class="activity">
     <!--导航栏-->
     <nav-bar class="activity-nav">
-      <div slot="left">返回</div>
+      <div slot="left" @click="goback"><img src="~@/assets/img/back.png"></div>
       <div slot="center">答题</div>
     </nav-bar>
     <Scroll class="activity-scroll">
@@ -36,7 +36,7 @@
 import NavBar from "@/components/common/navbar/NavBar";
 import Scroll from "@/components/common/scroll/Scroll"
 import Vue from "vue";
-import {getInfo,getPrize} from "@/network/login";
+import {getPrize} from "@/network/login";
 
 export default {
   name: "Activity",
@@ -72,6 +72,9 @@ export default {
     }
   },
   methods:{
+    goback(){
+      this.$router.push('/firstPage')
+    },
     nextone(){
       console.log(this.currentProblem)
       if(this.currentProblem<this.list.length-1){
@@ -126,11 +129,20 @@ export default {
     获取题目信息
      */
     getList(){
-      getInfo().then(res=>{
-        this.list=this.shuffle(res.data.problems);
+      if(Object.keys(this.$store.state.info).length==0){
+        this.$store.dispatch('getInfo').then(res=>{
+          console.log(res);
+          this.list=this.shuffle(this.$store.state.info.problems);
+          this.one=this.list[0];
+          this.correct=this.$store.state.info.correct
+        })
+      }
+      else{
+        this.list=this.shuffle(this.$store.state.info.problems);
         this.one=this.list[0];
-        this.correct=res.data.correct
-      })
+        this.correct=this.$store.state.info.correct
+      }
+
     },
     /*
     用户点击选项事件
@@ -298,4 +310,6 @@ export default {
 .active-bgcolor{
   background-color: #4ea5fe;
 }
+
+
 </style>
