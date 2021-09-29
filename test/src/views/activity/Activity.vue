@@ -12,7 +12,7 @@
         <span>{{str[resLength]}}</span>
       </div>
       <!--结果展示-->
-      <div class="title-box" v-show="isFinish">
+      <div class="title-box" v-show="isFinish" :style="{color:currentAnswer?'#579242':'#fe2563'}">
         您选择的是：{{myAnswer}}    答案是：{{one.answer}}
       </div>
 
@@ -26,7 +26,8 @@
 
     </Scroll>
     <div class="activity-next">
-      <el-button type="primary" class="activity-btn" round >提交</el-button>
+      <el-button type="primary" v-show="!isFinish" class="activity-btn" round @click="submit">提交</el-button>
+      <el-button type="primary" v-show="isFinish" class="activity-btn" round @click="nextone">下一个</el-button>
     </div>
   </div>
 </template>
@@ -54,6 +55,9 @@ export default {
       resLength:null,//记录当前题目答案个数
       currentIndex:0,//记录用户点击选项位置
       isFinish:false,//记录答题状态
+      currentProblem:0,//记录当前已经回答的个数,
+      currentAnswer:false,
+      currentNumber:0,
       one:{
         "desc": "学校校徽包括徽志和徽章，徽志为____型，徽章为____证章。徽章题有毛泽东____校名“长沙理工大学”。",
         "options": [
@@ -68,6 +72,33 @@ export default {
     }
   },
   methods:{
+    nextone(){
+      console.log(this.currentProblem)
+      if(this.currentProblem<this.list.length-1){
+        this.currentProblem++;
+        this.one=this.list[this.currentProblem]
+        this.isFinish=false;
+      }
+      else{
+        this.$message.error({
+          message: '注意:已经没有题了',
+          center: true
+        })
+      }
+    },
+    submit(){
+      if(this.myAnswer==this.one.answer){
+        this.currentAnswer=true
+        this.currentNumber++
+      }
+      else{
+        this.currentAnswer=false
+      }
+      this.isFinish=true
+      for(let i=0;i<4;i++){
+        Vue.set(this.isActive,i,false)
+      }
+    },
     /*
     获取题目信息
      */
@@ -84,24 +115,34 @@ export default {
     2.将选项的字母替换到结果数组中
      */
     itemClick(index){
-      console.log("index",this.currentIndex);
-      console.log("length",this.resLength)
+      // console.log("index",this.currentIndex);
+      // console.log("length",this.resLength)
+
+
       if(this.isActive[index]){
         Vue.set(this.isActive,index,false)
+        console.log(this.result)
+        while(this.currentIndex>=this.resLength||this.result[this.currentIndex]==''){
+          this.currentIndex=this.currentIndex-1
+          console.log("-1了");
+        }
+
         Vue.set(this.result,this.currentIndex,'')
+        console.log(this.currentIndex)
+
         if(this.currentIndex!==0){
           this.currentIndex--;
+          console.log("后退了");
         }
       }
       else{
-        if(this.currentIndex>=this.resLength-1){
+        if(this.currentIndex>this.resLength-1||this.currentIndex<0){
           this.$message.error({
             message: '注意:选项超过个数',
             center: true
           })
           return
         }
-
         if(this.result[this.currentIndex]!==''){
           this.currentIndex=this.currentIndex+1
         }
